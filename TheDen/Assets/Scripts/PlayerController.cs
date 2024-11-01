@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
@@ -27,6 +28,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackRange; //range of the attack, radius of attack
     [SerializeField] int attackDamage; //damage odf attack
 
+    //player health
+    [SerializeField] int maxHp;
+    [SerializeField] int currentHp;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +47,10 @@ public class PlayerController : MonoBehaviour
             transform.localScale = facingLeft;
             isFacingLeft = true;
         }
+
+        //set starting hp
+        currentHp = maxHp;
+
     }
 
     protected virtual void Flip() //method used ot flip the character values
@@ -132,6 +141,42 @@ public class PlayerController : MonoBehaviour
 
         //draws the circle
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    internal void DamagePlayer(int damage)
+    {
+        //update the hp, -= allows for healing and damage
+        //send in positive number for damage and negative for healing
+        currentHp -= damage;
+
+        //if they heal above max, set to max
+        if(currentHp > maxHp)
+        {
+            currentHp = maxHp;
+        }
+
+        //if they hit <= 0 hp, die
+        if(currentHp <= 0)
+        {
+            Die();
+        }
+
+        //update the UI
+        UIManagerHealth.Instance.UpdateHealthBar(currentHp,maxHp);
+    }
+    void Die()
+    {
+        Debug.Log("Died");
+    }
+
+    public int GetMaxHp()
+    {
+        return maxHp;
+    }
+
+    public int GetCurrentHp()
+    {
+        return currentHp;
     }
 
 }

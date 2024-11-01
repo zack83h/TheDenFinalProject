@@ -8,11 +8,13 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float moveSpeed;
     private Rigidbody2D rb;
     private Vector2 moveDirection;
-    private bool startingDirection = false;
 
     //health variables
     [SerializeField] int maxHp = 100;
     int currentHp;
+
+    //damage
+    [SerializeField] int damage;
 
 
     // Start is called before the first frame update
@@ -56,12 +58,24 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    //when called, destroy the enemy
     void Die()
     {
         //TO DO: death animation, diable enemy instead of destroying
 
         //delete the actor
         Destroy(gameObject);
+    }
+
+
+    //checking for collision
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //if colliding with the player deal damage
+        if(collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerController>().DamagePlayer(damage);
+        }
     }
 
 }
