@@ -63,6 +63,12 @@ public class EnemyController : MonoBehaviour
     {
         //TO DO: death animation, diable enemy instead of destroying
 
+        //update score
+        GameManager.Instance.IncreaseScore(5);
+
+        //decrease kill amount
+        GameManager.Instance.DecreaseKills();
+
         //delete the actor
         Destroy(gameObject);
     }

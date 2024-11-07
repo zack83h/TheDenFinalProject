@@ -100,6 +100,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
+  maxHp: 100
+  damage: 20
 --- !u!50 &7495081052790788370
 Rigidbody2D:
   serializedVersion: 4
