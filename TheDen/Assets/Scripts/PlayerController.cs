@@ -27,6 +27,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform attackPoint; //center attack point for the weapon
     [SerializeField] float attackRange; //range of the attack, radius of attack
     [SerializeField] int attackDamage; //damage odf attack
+    [SerializeField] GameObject weapon; //weapon sprite
+
+    //attack cooldown variables
+    float currentCd = 0f;
+    [SerializeField] float attackSpeed = 1f;
 
     //player health
     [SerializeField] int maxHp;
@@ -73,10 +78,24 @@ public class PlayerController : MonoBehaviour
         //getting movement inputs
         ProcessInputs();
 
-        //basic attacking
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(currentCd > 0)
         {
-            BasicAttack();
+            currentCd -= Time.deltaTime;
+        }
+
+        if(currentCd <= 0)
+        {
+            weapon.GetComponent<SpriteRenderer>().enabled = false;
+        }
+
+        //basic attacking
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if(currentCd <= 0)
+            {
+                currentCd = attackSpeed;
+                BasicAttack();
+            }
         }
     }
 
@@ -114,8 +133,6 @@ public class PlayerController : MonoBehaviour
     {
         //set player velocity
         rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
-
-
     }
 
     void BasicAttack() //player basic attack
@@ -132,6 +149,9 @@ public class PlayerController : MonoBehaviour
         {
             enemy.GetComponent<EnemyController>().TakeDamage(25);
         }
+
+        //show the sword to show its damaging
+        weapon.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     void OnDrawGizmosSelected() //shows a circle with the range in the editor

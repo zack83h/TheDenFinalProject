@@ -100,8 +100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
+  player: {fileID: 8151645674430378645, guid: f8ee53bc2d36ac84cb48cbfc495ce813, type: 3}
   maxHp: 100
   damage: 20
+  freezeTimer: 0.5
 --- !u!50 &7495081052790788370
 Rigidbody2D:
   serializedVersion: 4

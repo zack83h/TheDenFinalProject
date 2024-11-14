@@ -22,7 +22,6 @@ public class Spawner : MonoBehaviour
     //timer
     float timer;
 
-
     ////array of enemies to spawn (5 in this case)
     //EnemyController[] toSpawn = new EnemyController[5];
 
@@ -79,8 +78,18 @@ public class Spawner : MonoBehaviour
     void SpawnEnemy()
     {
         //Debug.Log("Spawning");
+        //get spawn location
         float randomX = Random.Range(xMin, xMax);
         float randomY = Random.Range(yMin, yMax);
+
+        //make the spawn location and check if there is anything in the colliders
+        //Vector3 spawnLocation = new Vector3(randomX, randomY, 0);
+        //Collider2D[] colliders = Physics2D.OverlapCircleAll(spawnLocation, 2f);
+
+        //if()
+        //{
+
+        //}
         Instantiate(enemyPrefab, new Vector3(randomX, randomY, 0), Quaternion.identity);
     }
 }
