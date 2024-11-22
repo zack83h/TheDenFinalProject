@@ -32,6 +32,7 @@ public class BossSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //hide on start
         healthBarGreen.fillAmount = 0;
         healthBorderBlue.fillAmount = 0;
         healthUnderRed.fillAmount = 0;
@@ -40,7 +41,7 @@ public class BossSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (bossHasSpawned == true && bossDefeated == true && finished != true)
+        if(bossHasSpawned == true && bossDefeated == true && finished != true)
         {
             //update the round to say it ended, lowering the walls
             GameManager.Instance.UpdateRound();
@@ -62,7 +63,7 @@ public class BossSpawner : MonoBehaviour
         }
 
         //if the boss doesnt exist and it has been spawned already (it must have been defeated)
-        if (boss == null && bossHasSpawned)
+        if(boss == null && bossHasSpawned)
         {
             bossDefeated = true;
         }
