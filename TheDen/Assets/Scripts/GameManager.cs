@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
@@ -23,7 +24,10 @@ public class GameManager : MonoBehaviour
     int score = 0;
     [SerializeField] TextMeshProUGUI scoreText;
 
-
+    //bool for if game is over
+    bool isGameOver = false;
+    [SerializeField] GameObject gameOverText;
+    [SerializeField] GameObject gameWinText;
 
     private void Awake()
     {
@@ -57,6 +61,13 @@ public class GameManager : MonoBehaviour
             ToggleableWalls.Instance.GetComponent<TilemapRenderer>().enabled = false;
             ToggleableWalls.Instance.GetComponent<TilemapCollider2D>().enabled = false;
         }
+
+        //game over
+        if (Input.GetButtonDown("Submit") && isGameOver)
+        {
+            SceneManager.LoadScene(0);
+        }
+
     }
 
     public void UpdateRound() //change whether or not a round was started
@@ -90,6 +101,18 @@ public class GameManager : MonoBehaviour
     {
         score += amount;
         scoreText.text = "Score: " + score;
+    }
+
+    public void InitiateGameOver()
+    {
+        isGameOver = true;
+        gameOverText.SetActive(true);
+    }
+
+    public void InitiateGameWin()
+    {
+        isGameOver = true;
+        gameWinText.SetActive(true);
     }
 
 }

@@ -24,10 +24,21 @@ public class EnemyController : MonoBehaviour
     float currentFreezeCd = -1f;
     [SerializeField] float freezeTimer = 0.5f;
 
+    //audio
+    [SerializeField] AudioClip hitSound;
+    [SerializeField] AudioClip deathSound;
+    AudioSource audioSource;
+
+    //potions
+    [SerializeField] GameObject potionPrefab;
+    [SerializeField] int potionChance = -1;
+
+    //score amt
+    [SerializeField] int scoreAmt;
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player")
+        player = GameObject.FindGameObjectWithTag("Player");
 ;    }
 
 
@@ -36,6 +47,8 @@ public class EnemyController : MonoBehaviour
     {
         //set the rb
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+
 
         currentHp = maxHp;
         //rb.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -93,6 +106,9 @@ public class EnemyController : MonoBehaviour
         }
 
         StopEnemy();
+
+        //play hit sound
+        AudioSource.PlayClipAtPoint(hitSound, player.transform.position, .5f);
     }
 
     //when called, destroy the enemy
@@ -101,10 +117,17 @@ public class EnemyController : MonoBehaviour
         //TO DO: death animation, diable enemy instead of destroying
 
         //update score
-        GameManager.Instance.IncreaseScore(5);
+        GameManager.Instance.IncreaseScore(scoreAmt);
 
         //decrease kill amount
         GameManager.Instance.DecreaseKills();
+       
+        //play death audio
+        AudioSource.PlayClipAtPoint(deathSound, player.transform.position, .5f);
+
+        //possibly spawn potion
+        int rand = Random.Range(1, 101);
+        SpawnPotion(rand);
 
         //delete the actor
         Destroy(gameObject);
@@ -114,6 +137,7 @@ public class EnemyController : MonoBehaviour
     //checking for collision
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        rb.velocity = new Vector2(0f,0f);
         //if colliding with the player deal damage
         if(collision.gameObject.tag == "Player")
         {
@@ -126,5 +150,22 @@ public class EnemyController : MonoBehaviour
         currentFreezeCd = freezeTimer;
     }
 
+    void SpawnPotion(int rand)
+    {
+        if(rand > 100 - potionChance)
+        {
+            Instantiate(potionPrefab, new Vector3(transform.position.x, transform.position.y, 1), Quaternion.identity);
+        }
+    }
+
+    public int GetMaxHP()
+    {
+        return maxHp;
+    }
+
+    public int GetCurrentHP()
+    {
+        return currentHp;
+    }
 
 }

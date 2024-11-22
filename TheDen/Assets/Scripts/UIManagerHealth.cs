@@ -35,7 +35,7 @@ public class UIManagerHealth : MonoBehaviour
 
     }
 
-    public void UpdateHealthBar(float currentHp, float maxHp)
+    public void UpdateHealthBar(float currentHp, float maxHp) //health bar from: 
     {
         //take the current and max hp
         //and set the healthbar to that %

@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int maxHp;
     [SerializeField] int currentHp;
 
+    //game over
+    bool isGameOver = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    protected virtual void Flip() //method used ot flip the character values
+    protected virtual void Flip() //method used ot flip the character values https://www.youtube.com/watch?v=dlYoy4galr4 | video used to implement 
     {
         if(isFacingLeft) //facing left
         {
@@ -75,26 +78,29 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //getting movement inputs
-        ProcessInputs();
-
-        if(currentCd > 0)
+        if (!isGameOver)
         {
-            currentCd -= Time.deltaTime;
-        }
+            //getting movement inputs
+            ProcessInputs();
 
-        if(currentCd <= 0)
-        {
-            weapon.GetComponent<SpriteRenderer>().enabled = false;
-        }
-
-        //basic attacking
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            if(currentCd <= 0)
+            if (currentCd > 0)
             {
-                currentCd = attackSpeed;
-                BasicAttack();
+                currentCd -= Time.deltaTime;
+            }
+
+            if (currentCd <= 0)
+            {
+                weapon.GetComponent<SpriteRenderer>().enabled = false;
+            }
+
+            //basic attacking
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (currentCd <= 0)
+                {
+                    currentCd = attackSpeed;
+                    BasicAttack();
+                }
             }
         }
     }
@@ -102,10 +108,11 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         //physics calculations
-        Move();
+        if(!isGameOver)
+            Move();
     }
 
-    void ProcessInputs() //process player inputs
+    void ProcessInputs() //process player inputs: https://www.youtube.com/watch?v=Cry7FOHZGN4
     {
         //get wasd inputs
         float movexX = Input.GetAxisRaw("Horizontal");
@@ -115,8 +122,8 @@ public class PlayerController : MonoBehaviour
         //normalized to confine values in diagonal directions
         moveDirection = new Vector2(movexX, moveY).normalized;
 
-        //change the way the player is facing
-        if(movexX > 0 && isFacingLeft)
+        //change the way the player is facing https://www.youtube.com/watch?v=dlYoy4galr4
+        if (movexX > 0 && isFacingLeft)
         {
             isFacingLeft = false;
             Flip();
@@ -129,13 +136,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Move() //player movement
+    void Move() //player movement: https://www.youtube.com/watch?v=Cry7FOHZGN4 (using velocity instead of position)
     {
         //set player velocity
         rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
     }
 
-    void BasicAttack() //player basic attack
+    void BasicAttack() //player basic attack https://www.youtube.com/watch?v=sPiVz1k-fEs | most combat related stuff from this video
     {
         //Detect enemies in range of attack
         //apply damage to the enemies
@@ -187,6 +194,16 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         Debug.Log("Died");
+
+        //start game over
+        GameManager.Instance.InitiateGameOver();
+        isGameOver = true;
+
+
+        //hide the player
+        GetComponent<SpriteRenderer>().enabled = false;
+        weapon.GetComponent<SpriteRenderer>().enabled = false;
+
     }
 
     public int GetMaxHp()
